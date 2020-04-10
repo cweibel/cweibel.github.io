@@ -2,3 +2,5 @@ name: Chris Weibel's Blog
 markdown: kramdown
 
 permalink: /blog/:year/:month/:day/:title
+
+theme: jekyll-theme-slate
