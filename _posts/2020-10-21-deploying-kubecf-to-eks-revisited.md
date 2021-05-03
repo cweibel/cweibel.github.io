@@ -1,8 +1,8 @@
-# DEPLOYING KUBECF TO EKS, REVISITED
-
-Oct 21, 2020
-by Chris Weibel
-
+---
+layout: post
+title: "Deploying KubeCF to EKS, Revisited"
+date: 2020-10-21
+---
 
 ![quoka](https://raw.githubusercontent.com/cweibel/ghost_blog_pics/master/natalie-su-6ZDY7Xht8_unsplash_smaller.png)
 

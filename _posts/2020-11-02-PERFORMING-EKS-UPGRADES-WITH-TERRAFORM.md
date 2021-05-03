@@ -1,7 +1,8 @@
-# PERFORMING EKS UPGRADES WITH TERRAFORM
-
-Nov 03, 2020
-by Chris Weibel
+---
+layout: post
+title: "Performing EKS Upgrades with Terraform"
+date: 2020-11-02
+---
 
 ![quackquack](https://images.unsplash.com/photo-1558911350-c1e2588e6c7d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2840&q=80)
 
