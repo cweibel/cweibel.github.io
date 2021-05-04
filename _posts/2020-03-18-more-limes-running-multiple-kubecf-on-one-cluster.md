@@ -6,10 +6,10 @@ date: 2020-03-18
 
 ![pic](https://raw.githubusercontent.com/cweibel/ghost_blog_pics/master/herry-sutanto-H18UoPLPvcE-unsplash-2.jpg)
 
-Photo by [Herry Sutanto](https://unsplash.com/@sutanto?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/limes?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText
+Photo by [Herry Sutanto](https://unsplash.com/@sutanto?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/limes?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)
 
 
-In a [previous blog post](https://www.starkandwayne.com/blog/running-cloud-foundry-on-kubernetes-using-kubecf/) we discovered how to deploy a single KubeCF with a single cf-operator. Exciting stuff! What if you wanted to deploy a second KubeCF? A third?
+In a [previous blog post](https://cweibel.github.io/blog/2020/01/15/running-cloud-foundry-on-kubernetes-using-kubecf) we discovered how to deploy a single KubeCF with a single cf-operator. Exciting stuff! What if you wanted to deploy a second KubeCF? A third?
 
 With a couple minor changes to subsequent installs you can deploy as many instancess of KubeCF as you like, each in their own namespaces.
 
