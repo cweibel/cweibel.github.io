@@ -86,7 +86,7 @@ You'll need to remember to create the namespace first until that functionality i
 
 ## No Tiller
 
-You no longer need to do the helm init dance, no server side components should make Helm easier to manage for operators in the long run.  Hurray!
+You no longer need to do the `helm init` dance, no server side components should make Helm easier to manage for operators in the long run.  Hurray!
 
 ## Miscellaneous
 
