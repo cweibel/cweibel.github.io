@@ -24,7 +24,7 @@ There are a few configurations which must be performed to allow pgBadger to read
 
 ### Configure PostgreSQL
 
-To configure PostgreSQL to emit logs see [this](https://www.starkandwayne.com/blog/modifying-the-default-postgresql-helm-chart-to-emit-logging/) blog post. The author is fantastic.  Basically you'll need to enable logging and select which queries are emitted to the logs.  The example in the blog post assumes you want ALL queries since any query taking 0 or longer seconds is logged.
+To configure PostgreSQL to emit logs see [this](https://cweibel.github.io/blog/2019/08/14/modify-postgresql-helm-chart-to-emit-logging) blog post. The author is fantastic.  Basically you'll need to enable logging and select which queries are emitted to the logs.  The example in the blog post assumes you want ALL queries since any query taking 0 or longer seconds is logged.
 
 ### Retrieve Log Destination
 There are a number of ways to define the type of logs to emit.  You will need this value as a parameter to the `pgbadger` script. To retrieve what the current value used is query the database instance:
