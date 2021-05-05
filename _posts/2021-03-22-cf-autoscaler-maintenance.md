@@ -1,4 +1,3 @@
-
 ---
 layout: post
 title: "Maintenance For Cloud Foundry Autoscaler"
