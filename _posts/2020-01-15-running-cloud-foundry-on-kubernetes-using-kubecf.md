@@ -38,7 +38,7 @@ Below, we'll cover all the moving pieces associated with sprinkling a bit of Clo
 
 ![yummy fries](https://raw.githubusercontent.com/cweibel/ghost_blog_pics/master/emmy-smith-LEjEst7lLfU-unsplash.jpg)
 
-*(Photo by Emmy Smith on Unsplash)*
+*(Photo by [Emmy Smith](https://unsplash.com/@emsmith?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/uri?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText))*
 
 There are a few layers to this process which include:
 
