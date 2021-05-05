@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Registering (Someone Else's) Service Broker in Cloud Foundry"
+title: "Hey BOSH, Gimme A VM Quick!"
 date: 2019-03-15
 ---
 
