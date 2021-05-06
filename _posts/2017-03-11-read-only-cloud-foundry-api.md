@@ -93,7 +93,7 @@ Once the above server is deployed inside of a Cloud Foundry deployment you can c
 curl -i -X GET -H "Authorization: bearer $BEARER_TOKEN"  https://api-reporting.system.mycf.io/v2/spaces
 ```
 
-For a full example of how to get the bearer token click here: 
+For a full example of how to get the bearer token click here: [https://cweibel.github.io/blog/2017/03/03/curl-a-cf-api-endpoint](https://cweibel.github.io/blog/2017/03/03/curl-a-cf-api-endpoint)
 
 
 You can now also use this new Reporting CC API endpoint when configuring the Prometheus cf_exporter exporter: [ https://github.com/cloudfoundry-community/prometheus-boshrelease/blob/master/jobs/cf_exporter/spec#L13]( https://github.com/cloudfoundry-community/prometheus-boshrelease/blob/master/jobs/cf_exporter/spec#L13)
