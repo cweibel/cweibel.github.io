@@ -4,7 +4,7 @@ title: "Verify the Order of Signed Certificates for BOSH and UAA"
 date: 2016-08-05
 ---
 
-![map](https://raw.githubusercontent.com/cweibel/ghost_blog_pics/master/steve-smith-3bus5RKqlOs-unsplash.jpg)
+![map](https://raw.githubusercontent.com/cweibel/ghost_blog_pics/master/steve-smith-nY8_HU_DTaI-unsplash.jpg)
 
 
 
