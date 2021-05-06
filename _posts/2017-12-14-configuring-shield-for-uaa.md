@@ -10,7 +10,7 @@ date: 2017-12-14
 
 Photo by [Steve Smith](https://unsplash.com/@varrak?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/uri?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)
 
-## OVERVIEW
+## Overview
 
 The upcoming release of SHIELD v8 adds support for GitHub and UAA authentication providers. Previous versions of SHIELD only supported basic auth. Many organizations already heavily rely on GitHub and UAA to organize users and permissions within an organization. You will be able to leverage these existing authentication providers to grant access to SHIELD.
 
