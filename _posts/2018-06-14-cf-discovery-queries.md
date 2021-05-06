@@ -190,3 +190,48 @@ Output:
 > SELECT COUNT(*) FROM quota_definitions;
 
 If you combine this output with the [cf inventory scraper](https://github.com/cloudfoundry-community/cloudfoundry-utils/blob/master/bin/cf-inventory) you'll get a full overview of your CF deployment.
+
+## List of Organizations and the number of application instances they've started in the last 7 days:
+
+```
+SELECT 
+  sum(processes.instances) as app_instance_count,
+  organizations.name
+FROM 
+  processes, 
+  apps, 
+  spaces, 
+  organizations 
+WHERE 
+  processes.app_guid=apps.guid and 
+  apps.space_guid=spaces.guid and
+  spaces.organization_id=organizations.id and
+  processes.state='STARTED' and 
+  processes.created_at > DATE(NOW()) - INTERVAL 7 DAY 
+GROUP BY 
+  organizations.id, 
+  organizations.name 
+ORDER BY 1 desc;
+```
+
+## List of Organizations and how much RAM their running application instances have reserved:
+
+```
+SELECT
+  sum(processes.memory * processes.instances) AS memory_reserved,  
+  organizations.name 
+FROM 
+  processes, 
+  apps, 
+  spaces, 
+  organizations 
+WHERE 
+  processes.app_guid=apps.guid and 
+  apps.space_guid=spaces.guid and
+  spaces.organization_id=organizations.id and
+  processes.state='STARTED' 
+GROUP BY 
+  organizations.id, 
+  organizations.name 
+ORDER BY 1 desc;
+```
