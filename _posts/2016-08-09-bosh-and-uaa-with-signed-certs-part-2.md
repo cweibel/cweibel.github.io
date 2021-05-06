@@ -14,7 +14,7 @@ Photo by [Steve Smith](https://unsplash.com/@varrak?utm_source=unsplash&utm_medi
 
 In the second part of configuring UAA with BOSH we'll cover changes which are needed for Health Monitor which may not be obvious from the tutorial found at [http://bosh.io/docs/director-users-uaa.html](http://bosh.io/docs/director-users-uaa.html).
 
-Part I of this tutorial is here:
+Part I of this tutorial is here: 
 
 
 

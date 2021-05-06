@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Verify the Order of Signed Certificates for BOSH + UAA - Part I"
+title: "Verify the Order of Signed Certificates for BOSH and UAA"
 date: 2016-08-05
 ---
 
@@ -11,7 +11,7 @@ date: 2016-08-05
 Photo by [Steve Smith](https://unsplash.com/@varrak?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/uri?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)
 
 
-In a previous article []() we discovered how to add a multiple/intermediate level signed certificates to UAA on BOSH. Recently I discovered one of my deployments had the certs in the wrong order and a kind gentleman named Thilak showed me how to verify the order of certificates is correct. While the `bosh_cli` didn't complain about the order other tools might so it's good to get them in the right order. We should always strive to have nice things!
+In a previous article [https://www.starkandwayne.com/blog/bosh-uaa-with-signed-certificates/](https://www.starkandwayne.com/blog/bosh-uaa-with-signed-certificates/) we discovered how to add a multiple/intermediate level signed certificates to UAA on BOSH. Recently I discovered one of my deployments had the certs in the wrong order and a kind gentleman named Thilak showed me how to verify the order of certificates is correct. While the `bosh_cli` didn't complain about the order other tools might so it's good to get them in the right order. We should always strive to have nice things!
 
 Start by running the `openssl` and use the director url and port as seen below:
 
