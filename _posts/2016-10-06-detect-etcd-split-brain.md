@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Detect etcd Split Brain in Cloud Foundry)"
+title: "Detect etcd Split Brain in Cloud Foundry"
 date: 2016-10-06
 ---
 
