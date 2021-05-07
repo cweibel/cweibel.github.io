@@ -4,7 +4,7 @@ title: "Easy Deployment of Cloud Foundry on AWS Using Terraform"
 date: 2015-04-06
 ---
 
-![map](https://raw.githubusercontent.com/cweibel/ghost_blog_pics/master/rene-porter-qm3a627dU8c-unsplash.jpg)
+![map](https://raw.githubusercontent.com/cweibel/ghost_blog_pics/master/rene-porter-ozhHBTO5YR0-unsplash.jpg)
 
 
 Photo by [René Porter](https://unsplash.com/@reneporter?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/uri?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)
