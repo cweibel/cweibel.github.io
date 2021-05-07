@@ -15,7 +15,7 @@ Photo by [Markus Spiske](https://unsplash.com/@markusspiske?utm_source=unsplash&
 Assumptions:
 
  - OpenStack is already installed
- - If OpenStack Juno is used, make sure [this patch](https://blog.starkandwayne.com/2015/05/05/openstack-juno-static-ip-patch/) is applied
+ - If OpenStack Juno is used, make sure [this patch](https://cweibel.github.io/blog/2015/05/05/openstack-juno-static-ip-patch) is applied
  - You are provided an admin login or an administrator follows the steps in 'Create A New User' and provides you the credentials
  - An external network has been created
  - An Ubuntu image is already uploaded
