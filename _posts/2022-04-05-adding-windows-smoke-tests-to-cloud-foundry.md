@@ -4,7 +4,7 @@ title: "Adding Windows Smoke Tests to Cloud Foundry"
 date: 2022-04-05
 ---
 
-## Openning A Window To Clear the Smoke (Tests)
+## Opening A Window To Clear the Smoke (Tests)
 
 ![pic](https://raw.githubusercontent.com/cweibel/ghost_blog_pics/master/ahmed-zayan-kQebUnFAOos-unsplash-2.jpg)
 
