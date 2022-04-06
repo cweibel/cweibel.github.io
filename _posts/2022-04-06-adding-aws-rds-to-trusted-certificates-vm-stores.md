@@ -1,0 +1,270 @@
+---
+layout: post
+title: "Adding AWS RDS CA to Trusted Certificates BOSH VMs"
+date: 2022-04-04
+---
+
+## Who do you trust?
+
+![pic](brett-jordan-oP48_y30gjM-unsplash-2.jpg)
+
+Photo by [Brett Jordan](https://unsplash.com/@brett_jordan?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com)
+
+
+
+This is a series of rambling thoughts... 
+
+## Overview
+
+Using SSL connections to RDS instances on BOSH and Cloud Foundry requires two things:
+
+ 1. The RDS PostgreSQL CA pem file to exist on the VM in a default trusted certificate store location 
+ 2. Each component which connects to a RDS PostgreSQL database to be configured to use sslmode `verify-ca`
+
+### Getting RDS PostgreSQL CA onto VMs
+
+There are two mechanisms which will be used:
+
+#### Option 1 - Use `os-conf-release` to place the CA
+
+This one is useful for getting the CA onto a `protoBOSH` or any other VM created with `bosh create-env`.
+
+Specifically it leverages the `ca_certs` job in `os-conf-release` at `https://github.com/cloudfoundry/os-conf-release/blob/master/jobs/ca_certs/spec`
+
+So, something like:
+
+```
+properties:
+  certs:
+    description: "Concatenated set of certificates in PEM format"
+    default: ""
+    example: |
+      -----BEGIN CERTIFICATE-----
+      EXAMPLE
+      -----END CERTIFICATE-----
+```
+
+
+So the ops file would look like:
+
+```
+- path: /releases/name=os-conf?
+  release: os-conf
+  type: replace
+  value:
+    name: os-conf
+    sha1: 386293038ae3d00813eaa475b4acf63f8da226ef
+    url: https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=22.1.2
+    version: 22.1.2
+- path: /instance_groups/name=bosh/jobs/-
+  type: replace
+  value:
+    name: ca_certs
+    release: os-conf
+    properties:
+      certs:|
+        -----BEGIN CERTIFICATE-----
+        MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
+        VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
+        MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
+        em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
+        ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
+        BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
+        biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
+        BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+        AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
+        oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
+        0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
+        6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
+        O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
+        McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
+        BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
+        pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
+        AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
+        ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
+        NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
+        cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
+        0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
+        zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
+        -----END CERTIFICATE-----
+```
+
+TODO: check if os-conf is already in the deployment manifest
+
+
+
+#### Option 2 - Configure BOSH to roll out CAs on all VMs
+
+The documentation at  [https://bosh.io/docs/trusted-certs/](https://bosh.io/docs/trusted-certs/)  shows how to configure the BOSH manifest to include CAs onto every virtual machine BOSH deploys, except itself (hence option 1 for the protoBOSH).
+
+The instructions have an example similar to:
+
+```
+properties:
+  director:
+    trusted_certs: |
+      # Comments are allowed in between certificate boundaries
+      -----BEGIN CERTIFICATE-----
+      MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
+      VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
+      MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
+      em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
+      ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
+      BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
+      biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
+      BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+      AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
+      oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
+      0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
+      6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
+      O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
+      McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
+      BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
+      pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
+      AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
+      ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
+      NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
+      cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
+      0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
+      zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
+      -----END CERTIFICATE-----
+
+```
+
+
+There is an `ops` file to help you do this automatically at [https://github.com/cloudfoundry/bosh-deployment/blob/master/misc/trusted-certs.yml](https://github.com/cloudfoundry/bosh-deployment/blob/master/misc/trusted-certs.yml) which has:
+
+```
+---
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/trusted_certs?
+  value: ((trusted_ca_cert))
+```
+
+To leverage this in genesis, include the a copy of this file in `./ops/trusted-certs` and include the cert there, no point in loading it into credhub since it isn't sensitive, so the ops file should look like:
+
+
+```
+
+---
+- type: replace
+  path: /instance_groups/name=bosh/properties/director/trusted_certs?
+  value: |
+    # Common Name: Amazon RDS Root 2019 CA Valid To: August 22, 2024 
+    -----BEGIN CERTIFICATE-----
+    MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
+    VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
+    MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
+    em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
+    ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
+    BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
+    biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
+    BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
+    AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
+    oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
+    0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
+    6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
+    O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
+    McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
+    BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
+    pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
+    AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
+    ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
+    NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
+    cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
+    0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
+    zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
+    -----END CERTIFICATE-----
+
+```
+
+
+TODO: UKNOWN - Does the whole RDS chain need to be included or is the Root CA good enough
+
+Note: The root CA for RDS is the same for `us-east-1` and `us-west-2`, there are other certs in the pem file which are region specific
+
+The RDS certs for other AWS regions are documented at [https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html) 
+
+
+Note 2: The CA cert for windows vms is done a bit differently
+TODO: get notes for windows
+
+### Testing option 1
+
+ - Deploy emptyvm
+ - Attempt to connect to rds db with URI with `sslmode=verify-ca`, it should fail
+ - Add the ops file to the deployment
+ - Check to see if releases have to be public or pull from local storage (or manually upload the release :) )
+ - Attempt to connect to the db again, it should work
+ - Repeat for the protoBOSH
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Clean this up below this line
+
+## Verifying that Database Connections is using SSL 
+
+Trust but verify.  By making a `psql` connection to the RDS instance you can verify the connections from Stratos are indeed leveraging SSL.  Run the following:
+
+```
+SELECT 
+  datid.datname,
+  pg_stat_ssl.pid,
+  usesysid,
+  usename,
+  application_name,
+  client_addr,
+  client_hostname,
+  client_port,
+  ssl,
+  cipher,
+  bits,
+  compression
+FROM
+  pg_stat_activity,
+  pg_stat_ssl
+WHERE
+  pg_stat_activity.pid = pg_stat_ssl.pid
+  AND pg_stat_activity.usename = 'myuser';  # Name of the user you configured in CUPS
+
+
+ dataid |  datname   |  pid  | usesysid | username | application_name | client_addr  | client_hostname | client_port | ssl |           cipher            | bits | compression
+ -------+------------+-------+----------+----------+------------------+--------------+-----------------+-------------+-----+-----------------------------+------+------------
+  16104 | console_db |  3518 |    16939 | myuser   |                  | 10.244.0.20  |                 |       43104 | t   | ECDHE-RSA-AES256-GCM-SHA384 |  256 | f
+  16104 | console_db | 22334 |    16939 | myuser   |                  | 10.244.0.20  |                 |       56321 | t   | ECDHE-RSA-AES256-GCM-SHA384 |  256 | f
+  16104 | console_db | 25259 |    16939 | myuser   | psql             | 10.244.0.99  |                 |       58990 | t   | ECDHE-RSA-AES256-GCM-SHA384 |  256 | f
+
+```
+
+
+In the example above, the third connection is the `psql` client we are running this query from, the other two connections are coming from the Stratos app on the Diego cell.
+
+
+
+
+
+Enjoy!  
