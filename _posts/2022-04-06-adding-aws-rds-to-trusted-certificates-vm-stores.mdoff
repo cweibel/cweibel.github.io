@@ -62,7 +62,7 @@ So the ops file would look like:
     name: ca_certs
     release: os-conf
     properties:
-      certs:|
+      certs: |
         -----BEGIN CERTIFICATE-----
         MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
         VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
