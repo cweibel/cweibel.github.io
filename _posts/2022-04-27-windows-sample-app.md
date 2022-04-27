@@ -14,9 +14,9 @@ Photo by [sydney Rae](https://unsplash.com/@srz?utm_source=unsplash&utm_medium=r
 
 Ever try to find a really simple Windows app to test against Cloud Foundry Windows Cells?  
 
-Sometimes the most obvious answer is right under your nose.  Inside of the [`cf-smoke-tests`](https://github.com/cloudfoundry/cf-smoke-tests) are the tests used by Cloud Foundry which are safe to run against production.  
+Sometimes the most obvious answer is right under your nose.  Inside of the [`cf-smoke-tests`](https://github.com/cloudfoundry/cf-smoke-tests) are the tests used by Cloud Foundry to test for both `cflinuxfs3` and `windows` stacks which are safe to run against production.  
 
-In general the tests work by creating a test org, space, quota, pushes an app, scales it, retrieve logs and tear it all back down.  There are tests for both the `cflinuxfs3` and `windows2019` which require cells of each type to exist in the Cloud Foundry deployment. 
+In general the tests work by creating a test org, space, and quota, pushes an app, scales it, retrieve logs and finally tear it all back down.  There are tests for both the `cflinuxfs3` and `windows` however `cf-deployment` only includes the errand for `cflinuxfs3 ` by default.
 
 What all this means is there is a simple Windows Cloud Foundry app inside of the smoke tests, here is how you use it:
 
